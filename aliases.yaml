@@ -1,0 +1,5 @@
+local(num): 127.0.0.<num>
+dev(site): <site>.dev
+preset:
+  - local(1)
+  - dev(my.local.website)
