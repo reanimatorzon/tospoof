@@ -2,6 +2,12 @@ use std::error::Error;
 
 pub type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
+#[cfg(target_family = "windows")]
+pub const HOSTS_FILE_LOCATION: &str = "C:\\Windows\\System32\\drivers\\etc\\hosts";
+
+#[cfg(target_family = "unix")]
+pub const HOSTS_FILE_LOCATION: &str = "/etc/hosts";
+
 pub fn parse_function_args(sign: &str) -> (String, Vec<String>) {
     let sign = remove_whitespace(sign);
     if let Some(idx) = sign.find('(') {
