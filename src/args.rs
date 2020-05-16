@@ -1,26 +1,31 @@
-use clap::{App, AppSettings, Arg, ArgMatches, ArgSettings};
+//! Parses arguments using `clap-rs`
 
 use crate::aliases::AliasDictionary;
 use crate::commands::Command;
 use crate::global::{parse_function_args, remove_whitespace, Result};
+
 use std::str::FromStr;
 
+use anyhow::bail;
+use clap::{App, AppSettings, Arg, ArgMatches, ArgSettings};
+
 pub fn parse_args(aliases: &AliasDictionary) -> Result<(Command, Vec<String>, ArgMatches)> {
-    let app = App::new("tospoof")
+    let version = format!("{}\n", env!("CARGO_PKG_VERSION"));
+    let app = App::new(env!("CARGO_PKG_NAME"))
         .setting(AppSettings::SubcommandRequiredElseHelp)
+        .setting(AppSettings::GlobalVersion)
         .setting(AppSettings::VersionlessSubcommands)
+        .setting(AppSettings::DisableHelpSubcommand)
         .setting(AppSettings::ColorAuto)
-        //.setting(AppSettings::NoBinaryName)
         .setting(AppSettings::StrictUtf8)
-        .setting(AppSettings::SubcommandPrecedenceOverArg)
-        .version("0.9.0-alpha.2")
-        .author("Vasily Bolgar <vasily.bolgar@gmail.com>")
+        .version(version.as_str())
+        //.author(env!("CARGO_PKG_AUTHORS"))
         .about("Utility assists with 'hosts' file manipulations")
         .subcommand(
             App::new(Command::ON.to_string())
                 .about(concat!(
                     "Enables alias presets (or raw arguments) provided as list of arguments.\n",
-                    "First parameter is considered as address and processed with dig / nslookup"
+                    "First parameter is considered as address and processed with dig/nslookup"
                 ))
                 .arg(Arg::with_name("arguments").required(true).multiple(true)),
         )
@@ -29,10 +34,11 @@ pub fn parse_args(aliases: &AliasDictionary) -> Result<(Command, Vec<String>, Ar
         )
         .subcommand(
             App::new(Command::UPDATE.to_string())
-                .about("Update hosts file with data consumed from stdin/tty pipe")
+                .about("Updates hosts file with data consumed from stdin/tty pipe")
                 .arg(
                     Arg::new("verbose")
                         .short('v')
+                        .long("verbose")
                         .setting(ArgSettings::MultipleOccurrences)
                         .about("Prints updated data"),
                 ),
@@ -43,8 +49,13 @@ pub fn parse_args(aliases: &AliasDictionary) -> Result<(Command, Vec<String>, Ar
     let matches = app.get_matches();
     let subcommand = matches.subcommand();
 
-    let cmd = Command::from_str(subcommand.0)?;
+    let cmd = match Command::from_str(subcommand.0) {
+        Ok(x) => x,
+        Err(err) => bail!(String::from(err.as_str())),
+    };
+
     let args = process_args(aliases, &subcommand.1.unwrap());
+
     Ok((cmd, args, matches.to_owned()))
 }
 
@@ -86,7 +97,7 @@ fn expand_arg(aliases: &AliasDictionary, token: &str) -> Vec<String> {
 fn assert_args_count(sign: String, expected: usize, actual: usize) {
     assert_eq!(
         expected, actual,
-        "application error: alias '{}' has {} argument(s), actual argument(s) count = {}",
+        "app error: alias '{}' has {} argument(s), actual argument(s) count = {}",
         sign, expected, actual
     );
 }

@@ -1,15 +1,23 @@
-use crate::global::{parse_function_args, Result};
+//! Parses 'aliases.yaml' file located in the same directory as this binary.
+
 use std::collections::HashMap;
 use std::fs;
+
+use anyhow::bail;
 use yaml_rust::{Yaml, YamlLoader};
 
+use crate::global::{parse_function_args, Result};
+
+/// Alias aka Function
 #[derive(Debug)]
 pub struct Function {
     pub args: Vec<String>,
     pub list: Vec<String>,
 }
 
+/// Aliases storage
 pub type AliasDictionary = HashMap<String, Function>;
+
 type AliasEntry = (String, Function);
 
 pub fn parse_aliases_config(dir: &str) -> Result<AliasDictionary> {
@@ -21,8 +29,7 @@ pub fn parse_aliases_config(dir: &str) -> Result<AliasDictionary> {
 
 fn load_yaml(dir: &str, filename: &str) -> Result<Yaml> {
     let path = format!("{}/{}", dir, filename);
-    let content =
-        &fs::read_to_string(path).unwrap_or_else(|_| panic!("no '{}' found in {}", filename, dir));
+    let content = &fs::read_to_string(path)?;
 
     let mut docs = YamlLoader::load_from_str(content)?;
     assert_eq!(1, docs.len(), "only one document supported in YAML config");
@@ -63,7 +70,7 @@ fn check_deps(dict: &AliasDictionary) -> Result<()> {
     fn check(visited: &mut HashMap<String, X>, sign: String, dict: &AliasDictionary) -> Result<()> {
         match visited.get(&sign) {
             Some(X::VISITED) => return Ok(()),
-            Some(X::CURRENT) => panic!("circular dependency found in alias: {}", sign),
+            Some(X::CURRENT) => bail!("circular dependency found in alias: {}", sign),
             _ => (),
         }
 

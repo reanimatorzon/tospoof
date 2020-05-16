@@ -1,3 +1,5 @@
+//! Describes all subcommands and contains their logic
+
 use crate::dig::dig;
 use crate::global::{Result, HOSTS_FILE_LOCATION};
 
@@ -5,16 +7,24 @@ use std::fs;
 use std::io::{stdin, Read};
 use std::str::FromStr;
 
+use anyhow::bail;
 use atty::Stream;
 use clap::ArgMatches;
 
+/// Marks the start of dynamic block managed by the tool  
 const HEAD_COMMENT: &str = "# tospoof: {{";
+/// Marks the end of dynamic block managed by the tool
 const FOOT_COMMENT: &str = "# tospoof: }}";
 
+/// All the commands
 #[derive(Debug)]
 pub enum Command {
+    /// Enables alias and prints content to stdout
     ON,
+    /// Prints dynamic block managed by tool reading 'hosts' file
     PRINT,
+    /// Updates 'hosts' file with content consumed from stdin.
+    /// Warning: A dynamic block from 'hosts' file configured below will be erased
     UPDATE,
 }
 
@@ -68,10 +78,12 @@ impl Command {
             Command::PRINT => 0,
             Command::UPDATE => 0,
         };
+
         if args.len() < min {
-            panic!("not enough arguments for '{}'", self.to_string());
+            bail!("not enough arguments for '{}'", self.to_string())
+        } else {
+            Ok(())
         }
-        Ok(())
     }
 }
 

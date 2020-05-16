@@ -1,8 +1,9 @@
-use std::error::Error;
+//! Contains types, consts and functions used throughout modules
 
-pub type Result<T> = std::result::Result<T, Box<dyn Error>>;
+// pub type Result<T> = std::result::Result<T, Box<dyn Error>>;
+pub type Result<T> = anyhow::Result<T>;
 
-#[cfg(target_family = "windows")]
+#[cfg(target_os = "windows")]
 pub const HOSTS_FILE_LOCATION: &str = "C:\\Windows\\System32\\drivers\\etc\\hosts";
 
 #[cfg(target_family = "unix")]

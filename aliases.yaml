@@ -1,5 +1,73 @@
-local(num): 127.0.0.<num>
+# All the aliases (you can call them funct qions)
+
+# @see https://learn.akamai.com/en-us/webhelp/cloud-embed/cloud-embed-implementation-guide/GUID-6D45068F-6B96-4E16-AFA3-9E9EA5007505.html
+# ...as an example from Akamai CDN
+
+### Addresses: ###
+# [IPv4, IPv6 or edge hostname which will be processed via dig/nslookup]
+
+my-project-hosted-in-local-network-addr: 192.168.1.101 # IPv4
+my-prj: my-project-hosted-in-local-network-addr # simple alias
+
+# arguments are supported
+local(third, fourth): 127.0.<third>.<fourth>
 dev(site): <site>.dev
-preset:
-  - local(1)
-  - dev(my.local.website)
+
+# combined aliases
+localhost(last): local(0, <last>)
+
+### Domains: ###
+
+my-domains(lang):
+  - <lang>.example.com
+  - <lang>.test.net
+
+my-domains-full-list:
+  - us.example.com
+  - my-domains(de)
+  - my-domains(static)
+
+some-domains-as-one-line-array: [example.com, example.net]
+
+# first argument will be processed via dig/nslookup...
+preset-example:
+  - localhost(1)
+  - dev(example.local)
+  - my-domains-full-list
+
+# ...first argument will be also processed
+# note: wrap an alias with quotes if you want to use space characters
+preset-as-array-example: ['local(0, 1)', my-prj]
+
+### CLI usage examples: ###
+
+# [simple]
+# $ ./tospoof on preset-example
+#
+#  127.0.0.1 example.local.dev us.example.com de.example.com de.test.net static.example.com static.test.net
+#
+
+# [no aliases / presets]
+# note: first arguments is processed via dig/nslookup if no IP address itself
+# $ ./tospoof on 127.0.0.1 mydomain.com mydomain.net
+#
+# 127.0.0.1 mydomain.com mydomain.net
+#
+
+# [combined]
+# note: all arguments are *expanded* to an array, then first processed via dig/nslookup
+# note: no whitespaces allowed for hostnames and addresses
+# note: use quotes for function calls like *'local(0, 1)'* or avoid spaces *local(0,1)*
+# $ ./tospoof on 'local(0, 1)' my-domains-full-list some-domains-as-one-line-array
+#
+# > 127.0.0.1 us.example.com de.example.com de.test.net static.example.com static.test.net example.com example.ne
+#
+
+# [piped aliases]
+# $ ./tospoof on preset-example | ./tospoof on some-domains-as-one-line-array
+#
+# > 127.0.0.1 example.local.dev us.example.com de.example.com de.test.net static.example.com static.test.net
+# > 93.184.216.34 example.net
+#
+
+### Hint: You can also use all the power of YAML :) ###

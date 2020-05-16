@@ -1,6 +1,6 @@
 [package]
 name = "tospoof"
-version = "0.9.0"
+version = "0.9.0-alpha.2"
 authors = ["Vasiliy Bolgar <reanimatorzon@gmail.com>"]
 edition = "2018"
 
@@ -10,3 +10,5 @@ clap_generate = "3.0.0-beta.1"
 yaml-rust = "0.4.3"
 dns-lookup = "1.0.2"
 atty = "0.2"
+anyhow = "1.0.31"
+dirs = "2.0.2"
