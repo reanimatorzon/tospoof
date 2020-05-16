@@ -31,9 +31,9 @@ fn main() -> Result<()> {
 
 #[cfg(not(debug_assertions))]
 fn get_configs_dir() -> Result<String> {
-    println!("RELEASE");
     if let Some(path) = std::env::current_exe()?.parent() {
-        Ok(path.as_os_str().to_str().unwrap().to_string())
+        println!("{}", String::from(path.to_str().unwrap()));
+        Ok(String::from(path.to_str().unwrap()))
     } else {
         bail!("config directory not found")
     }
@@ -41,7 +41,6 @@ fn get_configs_dir() -> Result<String> {
 
 #[cfg(debug_assertions)]
 fn get_configs_dir() -> Result<String> {
-    println!("DEBUG");
     Ok(format!(
         "{}{}",
         home_dir().unwrap().to_str().unwrap(),
