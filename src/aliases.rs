@@ -21,27 +21,33 @@ pub type AliasDictionary = HashMap<String, Function>;
 type AliasEntry = (String, Function);
 
 pub fn parse_aliases_config(dir: &str) -> Result<AliasDictionary> {
-    let doc = &load_yaml(dir, "aliases.yaml")?;
-    let dict = parse_aliases(doc);
+    let doc = load_yaml(dir, "aliases.yaml")?;
+    let dict = parse_aliases(&doc);
     check_deps(&dict)?;
     Ok(dict)
 }
 
-fn load_yaml(dir: &str, filename: &str) -> Result<Yaml> {
+fn load_yaml(dir: &str, filename: &str) -> Result<Option<Yaml>> {
     let path = format!("{}/{}", dir, filename);
     let content = &fs::read_to_string(path)?;
 
     let mut docs = YamlLoader::load_from_str(content)?;
-    assert_eq!(1, docs.len(), "only one document supported in YAML config");
+    assert!(docs.len() <= 1,);
 
-    Ok(docs.remove(0))
+    match docs.len() {
+        0 => Ok(None),
+        1 => Ok(Some(docs.remove(0))),
+        _ => bail!("several documents aren't supported in 'aliases.yaml' config"),
+    }
 }
 
-fn parse_aliases(doc: &Yaml) -> AliasDictionary {
-    match doc.as_hash() {
-        Some(aliases) => aliases.iter().map(parse_function).collect(),
-        None => AliasDictionary::new(),
+fn parse_aliases(doc: &Option<Yaml>) -> AliasDictionary {
+    if let Some(doc) = doc {
+        if let Some(aliases) = doc.as_hash() {
+            return aliases.iter().map(parse_function).collect();
+        }
     }
+    AliasDictionary::with_capacity(0)
 }
 
 fn parse_function((sign, list): (&Yaml, &Yaml)) -> AliasEntry {
