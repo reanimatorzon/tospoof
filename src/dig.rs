@@ -35,14 +35,14 @@ mod tests {
 
     #[test]
     fn dig_ipv4() {
-        assert_eq!("192.168.0.1", dig("192.168.0.1").unwrap())
+        assert_eq!(dig("192.168.0.1").unwrap(), "192.168.0.1")
     }
 
     #[test]
     fn dig_ipv6() {
         assert_eq!(
-            "2001:0DB8:3C4D:7777:0260:3EFF:FE15:9501",
-            dig("2001:0DB8:3C4D:7777:0260:3EFF:FE15:9501").unwrap()
+            dig("2001:0DB8:3C4D:7777:0260:3EFF:FE15:9501").unwrap(),
+            "2001:0DB8:3C4D:7777:0260:3EFF:FE15:9501"
         )
     }
 }

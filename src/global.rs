@@ -41,27 +41,27 @@ mod test {
     #[test]
     fn test_remove_whitespace() {
         assert_eq!(
+            remove_whitespace(" a \t\t b \t c \n d \r e \r\n f \n"),
             "abcdef",
-            remove_whitespace(" a \t\t b \t c \n d \r e \r\n f \n")
         );
     }
 
     #[test]
     fn test_parse_function_args_no_args() {
         assert_eq!(
-            ("func_no_args".to_string(), vec![]),
-            parse_function_args(" \r\n func_no_args \r\n ")
+            parse_function_args(" \r\n func_no_args \r\n "),
+            ("func_no_args".to_string(), vec![])
         );
     }
 
     #[test]
     fn test_parse_function_args_three_args() {
         assert_eq!(
+            parse_function_args(" \r\n func(one, two, three) \r\n "),
             (
                 "func(3)".to_string(),
                 vec!["one".to_string(), "two".to_string(), "three".to_string()]
-            ),
-            parse_function_args(" \r\n func(one, two, three) \r\n ")
+            )
         );
     }
 }

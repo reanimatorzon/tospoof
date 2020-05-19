@@ -96,7 +96,7 @@ fn expand_arg(aliases: &AliasDictionary, token: &str) -> Vec<String> {
 
 fn assert_args_count(sign: String, expected: usize, actual: usize) {
     assert_eq!(
-        expected, actual,
+        actual, expected,
         "app error: alias '{}' has {} argument(s), actual argument(s) count = {}",
         sign, expected, actual
     );
