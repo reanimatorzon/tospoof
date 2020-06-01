@@ -11,7 +11,7 @@ use clap::{App, AppSettings, Arg, ArgMatches, ArgSettings};
 
 pub fn parse_args(aliases: &AliasDictionary) -> Result<(Command, Vec<String>, ArgMatches)> {
     let version = format!("{}\n", env!("CARGO_PKG_VERSION"));
-    let app = App::new(env!("CARGO_PKG_NAME"))
+    let app: App = App::new(env!("CARGO_PKG_NAME"))
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .setting(AppSettings::GlobalVersion)
         .setting(AppSettings::VersionlessSubcommands)
@@ -44,7 +44,8 @@ pub fn parse_args(aliases: &AliasDictionary) -> Result<(Command, Vec<String>, Ar
                 ),
         );
 
-    // TODO later: generate::<Bash, _>(&mut app.clone(), "tospoof", &mut io::stdout());
+    // TODO later: generate::<Bash, _>(&mut app.clone(), "tospoof", &mut
+    // io::stdout());
 
     let matches = app.get_matches();
     let subcommand = matches.subcommand();

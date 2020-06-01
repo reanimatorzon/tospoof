@@ -5,11 +5,12 @@ authors = ["Vasiliy Bolgar <reanimatorzon@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-clap = "3.0.0-beta.1"
-clap_generate = "3.0.0-beta.1"
+clap = "3.0.0-beta"
+clap_generate = "3.0.0-beta"
 yaml-rust = "0.4.3"
 dns-lookup = "1.0.2"
 atty = "0.2"
 anyhow = "1.0.31"
 dirs = "2.0.2"
 cfg-if = "0.1.10"
+covers = "0.1.0-beta"

@@ -2,10 +2,10 @@
 
 use crate::global::Result;
 
-use std::net::{Ipv4Addr, Ipv6Addr};
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
 use anyhow::bail;
-use dns_lookup::lookup_host;
+use covers::*;
 
 pub fn dig(hostname: &str) -> Result<String> {
     if is_ip_v4(hostname) || is_ip_v6(hostname) {
@@ -17,6 +17,11 @@ pub fn dig(hostname: &str) -> Result<String> {
     };
 
     Ok(ip_addr_list.first().expect("no IP resolved").to_string())
+}
+
+#[mocked(tests::lookup_host)]
+fn lookup_host(host: &str) -> std::io::Result<Vec<IpAddr>> {
+    dns_lookup::lookup_host(host)
 }
 
 fn is_ip_v4(hostname: &str) -> bool {
@@ -44,5 +49,15 @@ mod tests {
             dig("2001:0DB8:3C4D:7777:0260:3EFF:FE15:9501").unwrap(),
             "2001:0DB8:3C4D:7777:0260:3EFF:FE15:9501"
         )
+    }
+
+    #[test]
+    fn dig_host() {
+        assert_eq!(dig("example.com").unwrap(), "127.1.1.1")
+    }
+
+    #[mock]
+    fn lookup_host(_host: &str) -> std::io::Result<Vec<IpAddr>> {
+        Ok(vec![IpAddr::from(Ipv4Addr::new(127, 1, 1, 1))])
     }
 }

@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::fs;
 
 use anyhow::bail;
-use cfg_if::cfg_if;
+use covers::*;
 use yaml_rust::{Yaml, YamlLoader};
 
 use crate::global::{parse_function_args, Result};
@@ -37,14 +37,9 @@ pub fn parse_aliases_config(dir: &str) -> Result<AliasDictionary> {
     Ok(dict)
 }
 
-fn get_aliases_file_contents(_path: String) -> Result<String> {
-    cfg_if! {
-        if #[cfg(not(test))] {
-            Ok(fs::read_to_string(_path)?)
-        } else {
-            Ok(String::from(&_path[0.._path.len() - ALIASES_FILE_NAME.len() - 1]))
-        }
-    }
+#[mocked(tests::get_aliases_file_contents)]
+fn get_aliases_file_contents(path: String) -> Result<String> {
+    Ok(fs::read_to_string(path)?)
 }
 
 fn load_yaml(dir: &str, filename: &str) -> Result<Option<Yaml>> {
@@ -118,7 +113,6 @@ fn check_deps(dict: &AliasDictionary) -> Result<()> {
     Ok(())
 }
 
-// @see src/mocks.rs::ALIASES_FILE_CONTENT
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -126,122 +120,83 @@ mod tests {
     #[test]
     fn test_some() {
         let aliases: String = "\
-            my-project-hosted-in-local-network-addr: 192.168.1.101\n\
-            my-prj: my-project-hosted-in-local-network-addr\n\
-            local(third, fourth): 127.0.<third>.<fourth>\n\
-            dev(site): <site>.dev\n\
-            localhost(last): local(0, <last>)\n\
-            my-domains(lang):\n\
-              - <lang>.example.com\n\
-              - <lang>.test.net\n\
-            my-domains-full-list:\n\
-              - us.example.com\n\
-              - my-domains(de)\n\
-              - my-domains(static)\n\
-            some-domains-as-one-line-array: [example.com, example.net]\n\
-            preset-example:\n\
-              - localhost(1)\n\
-              - dev(example.local)\n\
-              - my-domains-full-list\n\
-            preset-as-array-example: ['local(0, 1)', my-prj]\n\
-        "
-        .to_string();
+            my-project-hosted-in-local-network-addr: 192.168.1.101\nmy-prj: \
+                               my-project-hosted-in-local-network-addr\nlocal(third, fourth): \
+                               127.0.<third>.<fourth>\ndev(site): <site>.dev\nlocalhost(last): local(0, \
+                               <last>)\nmy-domains(lang):\n- <lang>.example.com\n- \
+                               <lang>.test.net\nmy-domains-full-list:\n- us.example.com\n- my-domains(de)\n- \
+                               my-domains(static)\nsome-domains-as-one-line-array: [example.com, \
+                               example.net]\npreset-example:\n- localhost(1)\n- dev(example.local)\n- \
+                               my-domains-full-list\npreset-as-array-example: ['local(0, 1)', my-prj]\n"
+            .to_string();
 
         let actual = parse_aliases_config(&aliases);
 
         let mut expected = HashMap::new();
 
-        expected.insert(
-            "my-project-hosted-in-local-network-addr".to_string(),
-            Function {
-                args: vec![],
-                list: vec!["192.168.1.101".to_string()],
-            },
-        );
+        expected.insert("my-project-hosted-in-local-network-addr".to_string(), Function {
+            args: vec![],
+            list: vec!["192.168.1.101".to_string()],
+        });
 
-        expected.insert(
-            "my-prj".to_string(),
-            Function {
-                args: vec![],
-                list: vec!["my-project-hosted-in-local-network-addr".to_string()],
-            },
-        );
+        expected.insert("my-prj".to_string(), Function {
+            args: vec![],
+            list: vec!["my-project-hosted-in-local-network-addr".to_string()],
+        });
 
-        expected.insert(
-            "local(2)".to_string(),
-            Function {
-                args: vec!["third".to_string(), "fourth".to_string()],
-                list: vec!["127.0.<third>.<fourth>".to_string()],
-            },
-        );
+        expected.insert("local(2)".to_string(), Function {
+            args: vec!["third".to_string(), "fourth".to_string()],
+            list: vec!["127.0.<third>.<fourth>".to_string()],
+        });
 
-        expected.insert(
-            "dev(1)".to_string(),
-            Function {
-                args: vec!["site".to_string()],
-                list: vec!["<site>.dev".to_string()],
-            },
-        );
+        expected.insert("dev(1)".to_string(), Function {
+            args: vec!["site".to_string()],
+            list: vec!["<site>.dev".to_string()],
+        });
 
-        expected.insert(
-            "localhost(1)".to_string(),
-            Function {
-                args: vec!["last".to_string()],
-                list: vec!["local(0, <last>)".to_string()],
-            },
-        );
+        expected.insert("localhost(1)".to_string(), Function {
+            args: vec!["last".to_string()],
+            list: vec!["local(0, <last>)".to_string()],
+        });
 
-        expected.insert(
-            "my-domains(1)".to_string(),
-            Function {
-                args: vec!["lang".to_string()],
-                list: vec![
-                    "<lang>.example.com".to_string(),
-                    "<lang>.test.net".to_string(),
-                ],
-            },
-        );
+        expected.insert("my-domains(1)".to_string(), Function {
+            args: vec!["lang".to_string()],
+            list: vec!["<lang>.example.com".to_string(), "<lang>.test.net".to_string()],
+        });
 
-        expected.insert(
-            "my-domains-full-list".to_string(),
-            Function {
-                args: vec![],
-                list: vec![
-                    "us.example.com".to_string(),
-                    "my-domains(de)".to_string(),
-                    "my-domains(static)".to_string(),
-                ],
-            },
-        );
+        expected.insert("my-domains-full-list".to_string(), Function {
+            args: vec![],
+            list: vec![
+                "us.example.com".to_string(),
+                "my-domains(de)".to_string(),
+                "my-domains(static)".to_string(),
+            ],
+        });
 
-        expected.insert(
-            "some-domains-as-one-line-array".to_string(),
-            Function {
-                args: vec![],
-                list: vec!["example.com".to_string(), "example.net".to_string()],
-            },
-        );
+        expected.insert("some-domains-as-one-line-array".to_string(), Function {
+            args: vec![],
+            list: vec!["example.com".to_string(), "example.net".to_string()],
+        });
 
-        expected.insert(
-            "preset-example".to_string(),
-            Function {
-                args: vec![],
-                list: vec![
-                    "localhost(1)".to_string(),
-                    "dev(example.local)".to_string(),
-                    "my-domains-full-list".to_string(),
-                ],
-            },
-        );
+        expected.insert("preset-example".to_string(), Function {
+            args: vec![],
+            list: vec![
+                "localhost(1)".to_string(),
+                "dev(example.local)".to_string(),
+                "my-domains-full-list".to_string(),
+            ],
+        });
 
-        expected.insert(
-            "preset-as-array-example".to_string(),
-            Function {
-                args: vec![],
-                list: vec!["local(0, 1)".to_string(), "my-prj".to_string()],
-            },
-        );
+        expected.insert("preset-as-array-example".to_string(), Function {
+            args: vec![],
+            list: vec!["local(0, 1)".to_string(), "my-prj".to_string()],
+        });
 
         assert_eq!(actual.unwrap(), expected);
+    }
+
+    #[mock]
+    fn get_aliases_file_contents(path: String) -> Result<String> {
+        Ok(String::from(&path[0..path.len() - ALIASES_FILE_NAME.len() - 1]))
     }
 }

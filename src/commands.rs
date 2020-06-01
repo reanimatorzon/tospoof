@@ -24,7 +24,8 @@ pub enum Command {
     /// Prints dynamic block managed by tool reading 'hosts' file
     PRINT,
     /// Updates 'hosts' file with content consumed from stdin.
-    /// Warning: A dynamic block from 'hosts' file configured below will be erased
+    /// Warning: A dynamic block from 'hosts' file configured below will be
+    /// erased
     UPDATE,
 }
 
@@ -88,13 +89,16 @@ impl Command {
 }
 
 fn on(input: &str, args: &[String]) -> Result<()> {
-    pretty_print(&format!(
-        "{}\n# tospoof: on: addr = {}\n{} {}",
-        input,
-        args[0],
-        &dig(&args[0])?,
-        &args[1..].join(" ")
-    ));
+    pretty_print(
+        format!(
+            "{}\n# tospoof: on: addr = {}\n{} {}",
+            input,
+            args[0],
+            &dig(&args[0])?,
+            &args[1..].join(" ")
+        )
+        .as_str(),
+    );
     Ok(())
 }
 
@@ -108,10 +112,7 @@ fn update(input: &str, verbose: u64) -> Result<()> {
     let blocks = split_hosts_content_blocks();
 
     if blocks.1.is_empty() {
-        content = format!(
-            "{}\n{}\n\n{}\n\n{}\n",
-            blocks.0, HEAD_COMMENT, content, FOOT_COMMENT
-        );
+        content = format!("{}\n{}\n\n{}\n\n{}\n", blocks.0, HEAD_COMMENT, content, FOOT_COMMENT);
     } else {
         content = format!(
             "{}{}\n\n{}\n\n{}{}",
