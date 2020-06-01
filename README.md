@@ -1,7 +1,7 @@
 ![Rust](https://github.com/reanimatorzon/tospoof/workflows/Rust/badge.svg)
 # tospoof
 
-_A binary for `hosts` file manipulations_
+_A binary for the `hosts` file manipulations_
 
 ## Purpose
 
