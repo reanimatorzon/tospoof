@@ -64,10 +64,11 @@ preset-as-array-example: ['local(0, 1)', my-prj]
 #
 
 # [piped aliases]
-# $ ./tospoof on preset-example | ./tospoof on some-domains-as-one-line-array
+# $ ./tospoof on preset-example | ./tospoof on some-domains-as-one-line-array | sudo ./tospoof update -v
 #
 # > 127.0.0.1 example.local.dev us.example.com de.example.com de.test.net static.example.com static.test.net
 # > 93.184.216.34 example.net
 #
+# Also this full commands updates `hosts` file
 
 ### Hint: You can also use all the power of YAML :) ###
