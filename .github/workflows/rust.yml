@@ -21,12 +21,13 @@ jobs:
         toolchain: nightly
         override: true
         components: rustfmt, clippy
-    - name: Lint  
+    - name: Format
       uses: actions-rs/cargo@v1
       with:
         command: fmt
         args: --all -- --check
-    - uses: actions-rs/cargo@v1
+    - name: Lint
+      uses: actions-rs/cargo@v1
       with:
         command: clippy
         args: -- -D warnings
@@ -34,7 +35,7 @@ jobs:
       uses: actions-rs/cargo@v1
       with:
         run: cargo +nightly build --verbose
-    - name: Run tests
+    - name: Tests
       uses: actions-rs/cargo@v1
       with:
         run: cargo +nightly test --verbose
