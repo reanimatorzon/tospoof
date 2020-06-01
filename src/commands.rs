@@ -11,7 +11,7 @@ use anyhow::bail;
 use atty::Stream;
 use clap::ArgMatches;
 
-/// Marks the start of dynamic block managed by the tool  
+/// Marks the start of dynamic block managed by the tool
 const HEAD_COMMENT: &str = "# tospoof: {{";
 /// Marks the end of dynamic block managed by the tool
 const FOOT_COMMENT: &str = "# tospoof: }}";

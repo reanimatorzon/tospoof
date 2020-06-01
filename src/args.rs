@@ -19,7 +19,6 @@ pub fn parse_args(aliases: &AliasDictionary) -> Result<(Command, Vec<String>, Ar
         .setting(AppSettings::ColorAuto)
         .setting(AppSettings::StrictUtf8)
         .version(version.as_str())
-        //.author(env!("CARGO_PKG_AUTHORS"))
         .about("Utility assists with 'hosts' file manipulations")
         .subcommand(
             App::new(Command::ON.to_string())
@@ -29,9 +28,7 @@ pub fn parse_args(aliases: &AliasDictionary) -> Result<(Command, Vec<String>, Ar
                 ))
                 .arg(Arg::with_name("arguments").required(true).multiple(true)),
         )
-        .subcommand(
-            App::new(Command::PRINT.to_string()).about("Prints dynamic block from hosts file"),
-        )
+        .subcommand(App::new(Command::PRINT.to_string()).about("Prints dynamic block from hosts file"))
         .subcommand(
             App::new(Command::UPDATE.to_string())
                 .about("Updates hosts file with data consumed from stdin/tty pipe")
