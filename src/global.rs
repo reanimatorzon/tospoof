@@ -55,10 +55,11 @@ mod test {
     fn test_parse_function_args_three_args() {
         assert_eq!(
             parse_function_args(" \r\n func(one, two, three) \r\n "),
-            (
-                "func(3)".to_string(),
-                vec!["one".to_string(), "two".to_string(), "three".to_string()]
-            )
+            ("func(3)".to_string(), vec![
+                "one".to_string(),
+                "two".to_string(),
+                "three".to_string()
+            ])
         );
     }
 }
