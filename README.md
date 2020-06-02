@@ -23,7 +23,11 @@ All remaining elements are IP addresses.
 @see Usage.
 
 ## Installation
-0. Install nightly toolchain
+0. Install `rustup` (https://rustup.rs/)
+   ```bash
+   $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   ```
+   Install nightly toolchain
    ```bash
    $ rustup toolchain install nightly
    ```
