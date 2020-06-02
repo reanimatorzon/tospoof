@@ -13,4 +13,4 @@ atty = "0.2"
 anyhow = "1.0.31"
 dirs = "2.0.2"
 cfg-if = "0.1.10"
-covers = "0.1.0-beta"
+covers = { version = "0.1.0-beta" }

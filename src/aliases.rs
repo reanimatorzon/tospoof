@@ -134,63 +134,93 @@ mod tests {
 
         let mut expected = HashMap::new();
 
-        expected.insert("my-project-hosted-in-local-network-addr".to_string(), Function {
-            args: vec![],
-            list: vec!["192.168.1.101".to_string()],
-        });
+        expected.insert(
+            "my-project-hosted-in-local-network-addr".to_string(),
+            Function {
+                args: vec![],
+                list: vec!["192.168.1.101".to_string()],
+            },
+        );
 
-        expected.insert("my-prj".to_string(), Function {
-            args: vec![],
-            list: vec!["my-project-hosted-in-local-network-addr".to_string()],
-        });
+        expected.insert(
+            "my-prj".to_string(),
+            Function {
+                args: vec![],
+                list: vec!["my-project-hosted-in-local-network-addr".to_string()],
+            },
+        );
 
-        expected.insert("local(2)".to_string(), Function {
-            args: vec!["third".to_string(), "fourth".to_string()],
-            list: vec!["127.0.<third>.<fourth>".to_string()],
-        });
+        expected.insert(
+            "local(2)".to_string(),
+            Function {
+                args: vec!["third".to_string(), "fourth".to_string()],
+                list: vec!["127.0.<third>.<fourth>".to_string()],
+            },
+        );
 
-        expected.insert("dev(1)".to_string(), Function {
-            args: vec!["site".to_string()],
-            list: vec!["<site>.dev".to_string()],
-        });
+        expected.insert(
+            "dev(1)".to_string(),
+            Function {
+                args: vec!["site".to_string()],
+                list: vec!["<site>.dev".to_string()],
+            },
+        );
 
-        expected.insert("localhost(1)".to_string(), Function {
-            args: vec!["last".to_string()],
-            list: vec!["local(0, <last>)".to_string()],
-        });
+        expected.insert(
+            "localhost(1)".to_string(),
+            Function {
+                args: vec!["last".to_string()],
+                list: vec!["local(0, <last>)".to_string()],
+            },
+        );
 
-        expected.insert("my-domains(1)".to_string(), Function {
-            args: vec!["lang".to_string()],
-            list: vec!["<lang>.example.com".to_string(), "<lang>.test.net".to_string()],
-        });
+        expected.insert(
+            "my-domains(1)".to_string(),
+            Function {
+                args: vec!["lang".to_string()],
+                list: vec!["<lang>.example.com".to_string(), "<lang>.test.net".to_string()],
+            },
+        );
 
-        expected.insert("my-domains-full-list".to_string(), Function {
-            args: vec![],
-            list: vec![
-                "us.example.com".to_string(),
-                "my-domains(de)".to_string(),
-                "my-domains(static)".to_string(),
-            ],
-        });
+        expected.insert(
+            "my-domains-full-list".to_string(),
+            Function {
+                args: vec![],
+                list: vec![
+                    "us.example.com".to_string(),
+                    "my-domains(de)".to_string(),
+                    "my-domains(static)".to_string(),
+                ],
+            },
+        );
 
-        expected.insert("some-domains-as-one-line-array".to_string(), Function {
-            args: vec![],
-            list: vec!["example.com".to_string(), "example.net".to_string()],
-        });
+        expected.insert(
+            "some-domains-as-one-line-array".to_string(),
+            Function {
+                args: vec![],
+                list: vec!["example.com".to_string(), "example.net".to_string()],
+            },
+        );
 
-        expected.insert("preset-example".to_string(), Function {
-            args: vec![],
-            list: vec![
-                "localhost(1)".to_string(),
-                "dev(example.local)".to_string(),
-                "my-domains-full-list".to_string(),
-            ],
-        });
+        expected.insert(
+            "preset-example".to_string(),
+            Function {
+                args: vec![],
+                list: vec![
+                    "localhost(1)".to_string(),
+                    "dev(example.local)".to_string(),
+                    "my-domains-full-list".to_string(),
+                ],
+            },
+        );
 
-        expected.insert("preset-as-array-example".to_string(), Function {
-            args: vec![],
-            list: vec!["local(0, 1)".to_string(), "my-prj".to_string()],
-        });
+        expected.insert(
+            "preset-as-array-example".to_string(),
+            Function {
+                args: vec![],
+                list: vec!["local(0, 1)".to_string(), "my-prj".to_string()],
+            },
+        );
 
         assert_eq!(actual.unwrap(), expected);
     }

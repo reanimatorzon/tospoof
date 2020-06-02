@@ -24,22 +24,18 @@ All remaining elements are IP addresses.
 
 ## Installation
 0. Install `rustup` (https://rustup.rs/)
+
    ```bash
    $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
    ```
-   Install nightly toolchain
-   ```bash
-   $ rustup toolchain install nightly
-   ```
-   You can set nightly as a default compiler version
-   ```bash
-   $ rustup default nightly
-   ```
-1. Run
+   
+1. Build downloaded source code
+
     ```bash
-    $ cargo +nightly build --release
+    $ cargo build --release
     ```
-2. Move `aliases.yaml` next to `./tospoof` binary
+   
+2. Move `aliases.yaml` next to `tospoof` binary, usually - (`./target/release/tospoof`)
 3. Update `aliases.yaml` according to your needs
 
 ## Usage
