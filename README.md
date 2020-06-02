@@ -23,8 +23,16 @@ All remaining elements are IP addresses.
 @see Usage.
 
 ## Installation
+0. Install nightly toolchain
+   ```bash
+   $ rustup toolchain install nightly
+   ```
+   You can set nightly as a default compiler version
+   ```bash
+   $ rustup default nightly
+   ```
 1. Run
-    ```
+    ```bash
     $ cargo +nightly build --release
     ```
 2. Move `aliases.yaml` next to `./tospoof` binary
