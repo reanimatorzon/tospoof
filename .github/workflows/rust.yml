@@ -14,6 +14,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install stable
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
       - name: Install nightly
         uses: actions-rs/toolchain@v1
         with:
@@ -24,34 +30,48 @@ jobs:
       - name: Format
         uses: actions-rs/cargo@v1
         with:
+          toolchain: nightly
           command: fmt
           args: --all -- --check
       - name: Lint
         uses: actions-rs/cargo@v1
         with:
+          toolchain: nightly
           command: clippy
           args: -- -D warnings
       - name: Build
         uses: actions-rs/cargo@v1
         with:
-          run: cargo +nightly build --verbose
+          toolchain: nightly
+          command: build
+          args: --verbose
       - name: Tests
         uses: actions-rs/cargo@v1
         with:
-          run: cargo +nightly test --verbose
+          toolchain: nightly
+          command: test
+          args: --verbose
       - name: Build (Stable)
         uses: actions-rs/cargo@v1
         with:
-          run: cargo +stable build --verbose
+          toolchain: stable
+          command: build
+          args: --verbose
       - name: Tests (Stable)
         uses: actions-rs/cargo@v1
         with:
-          run: cargo +stable test --verbose
+          toolchain: stable
+          command: test
+          args: --verbose
       - name: Build (Release)
         uses: actions-rs/cargo@v1
         with:
-          run: cargo +nightly build --release --verbose
+          toolchain: nightly
+          command: build
+          args: --release --verbose
       - name: Build (Stable, Release)
         uses: actions-rs/cargo@v1
         with:
-          run: cargo +stable build --release --verbose
+          toolchain: stable
+          command: build
+          args: --release --verbose
