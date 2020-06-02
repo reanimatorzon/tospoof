@@ -1,7 +1,7 @@
 ![Rust](https://github.com/reanimatorzon/tospoof/workflows/Rust/badge.svg)
 # tospoof
 
-_A binary for `hosts` file manipulations_
+_A binary for the `hosts` file manipulations_
 
 ## Purpose
 
@@ -23,8 +23,16 @@ All remaining elements are IP addresses.
 @see Usage.
 
 ## Installation
+0. Install nightly toolchain
+   ```bash
+   $ rustup toolchain install nightly
+   ```
+   You can set nightly as a default compiler version
+   ```bash
+   $ rustup default nightly
+   ```
 1. Run
-    ```
+    ```bash
     $ cargo +nightly build --release
     ```
 2. Move `aliases.yaml` next to `./tospoof` binary
